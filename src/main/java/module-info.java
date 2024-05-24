@@ -10,9 +10,9 @@ module com.example.aukmusic {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires javafx.media;
-    requires jfoenix;
-    requires mp3agic;
 
     opens com.example.aukmusic to javafx.fxml;
-    exports com.example.aukmusic;
+    opens AUKmusic.playlist to javafx.fxml;
+    opens AUKmusic.song to javafx.fxml;
+    exports AUKmusic;
 }

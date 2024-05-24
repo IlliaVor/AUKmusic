@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+    <center>
+        <TabPane>
+            <Tab text="Playlists">
+                <fx:include source="playlist/playlistController.fxml"/>
+            </Tab>
+            <Tab text="Songs">
+                <fx:include source="song/songController.fxml"/>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
