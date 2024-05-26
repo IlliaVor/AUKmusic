@@ -88,6 +88,15 @@ public class Song implements Comparable<Song> {
     }
 
     public static List<Song> list() throws IOException {
+        File file = new File(songsListPath);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists() || !parentDir.isDirectory()) {
+            parentDir.mkdirs();
+        }
+        if (!file.exists() || file.isDirectory()) {
+            file.createNewFile();
+        }
+
         String songs = FileIO.readFileAsString(songsListPath);
         String[] songTitles = songs.split(System.lineSeparator());
         List<Song> songList = new ArrayList<>();
@@ -108,11 +117,7 @@ public class Song implements Comparable<Song> {
                 throw new IOException("Song already exists.");
             }
         }
-
-        // Save the song to file
         song.saveToFile();
-
-        // Append the song title to the songs list
         FileIO.appendLineToFile(songsListPath, song.getTitle());
     }
 

@@ -80,15 +80,24 @@ public class Playlist implements Comparable<Playlist> {
     }
 
     public static List<Playlist> list() throws IOException {
-        String playlists = FileIO.readFileAsString(playlistsListPath);
-        String[] playlistNames = playlists.split(System.lineSeparator());
-        List<Playlist> playlistList = new ArrayList<>();
+        File file = new File(playlistsListPath);
+        File parentDir = file.getParentFile();
+
+        if (!parentDir.exists() || !parentDir.isDirectory()) {
+            parentDir.mkdirs();
+        }
+        if (!file.exists() || file.isDirectory()) {
+            file.createNewFile();
+        }
+
+        List<String> playlistNames = FileIO.readLinesFromFile(playlistsListPath);
+        List<Playlist> playlists = new ArrayList<>();
         for (String name : playlistNames) {
             if (!name.isEmpty()) {
-                playlistList.add(Playlist.get(name));
+                playlists.add(Playlist.get(name));
             }
         }
-        return playlistList;
+        return playlists;
     }
 
     public void saveToFile() {
