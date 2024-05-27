@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javax.print.DocFlavor.URL?>
+<GridPane fx:controller="AUKmusic.mediaplayer.MediaPlayerController" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+    <ImageView fx:id="artworkImageView" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="3"/>
+    <Label fx:id="songTitleLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label fx:id="songArtistLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Button fx:id="prevTrackButton" text="Prev"/>
+        <Button fx:id="playPauseButton" text="Play"/>
+        <Button fx:id="stopButton" text="Stop"/>
+        <Button fx:id="nextTrackButton" text="Next"/>
+    </HBox>
+
+
+    <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Label fx:id="currentTimeLabel" text="00:00"/>
+        <Slider fx:id="progressSlider" min="0" max="1" value="0"/>
+        <Label fx:id="totalTimeLabel" text="00:00"/>
+    </HBox>
+
+    <Label text="Volume" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <Slider fx:id="volumeSlider" min="0" max="1" value="0.5" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+    <Label text="Bass" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+    <Slider fx:id="bassSlider" min="-24" max="12" value="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+    <Label text="Mid" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+    <Slider fx:id="midSlider" min="-24" max="12" value="0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+    <Label text="Treble" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+    <Slider fx:id="trebleSlider" min="-24" max="12" value="0" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+    <ListView fx:id="playlistListView" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="4"/>
+    <ListView fx:id="trackListView" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="4"/>
+</GridPane>
