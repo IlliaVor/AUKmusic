@@ -62,6 +62,15 @@ public class MediaPlayerController {
     @FXML
     private Button nextTrackButton;
 
+    @FXML
+    private Slider progressSlider;
+
+    @FXML
+    private Label currentTimeLabel;
+
+    @FXML
+    private Label totalTimeLabel;
+
     private MediaPlayer mediaPlayer;
     private Playlist currentPlaylist;
     private AudioEqualizer audioEqualizer;
@@ -75,7 +84,6 @@ public class MediaPlayerController {
             showErrorAlert("Error Loading Playlists", "Failed to load playlists.", e.getMessage());
         }
 
-        // Add listener for playlist selection change
         playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 currentPlaylist = newValue;
@@ -83,14 +91,12 @@ public class MediaPlayerController {
             }
         });
 
-        // Add listener for volume change
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (mediaPlayer != null) {
                 mediaPlayer.setVolume(newValue.doubleValue());
             }
         });
 
-        // Add listener for equalizer change
         bassSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             setBassLevel(newValue.doubleValue());
         });
@@ -117,23 +123,40 @@ public class MediaPlayerController {
         nextTrackButton.setOnAction(event -> playNextTrack());
 
         prevTrackButton.setOnAction(event -> playPrevTrack());
+
+        progressSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) -> {
+            if (!isChanging && mediaPlayer != null) {
+                mediaPlayer.seek(Duration.seconds(progressSlider.getValue()));
+            }
+        });
+
+        progressSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (!progressSlider.isValueChanging() && mediaPlayer != null) {
+                double currentTime = mediaPlayer.getCurrentTime().toSeconds();
+                if (Math.abs(currentTime - newValue.doubleValue()) > 1) {
+                    mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
+                }
+            }
+        });
     }
 
     @FXML
     private void playTrack(Song song) {
         try {
             if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer.dispose();
+                Media currentMedia = mediaPlayer.getMedia();
+                String songUri = new File(song.getFilePath()).toURI().toString();
+
+                if (currentMedia != null && currentMedia.getSource().equals(songUri)) {
+                    mediaPlayer.play();
+                    return;
+                } else {
+                    mediaPlayer.stop();
+                    mediaPlayer.dispose();
+                }
             }
 
-            String filePath = song.getFilePath();
-            if (!new File(filePath).exists()) {
-                showErrorAlert("File Not Found", "The media file does not exist: " + filePath, "");
-                return;
-            }
-
-            Media media = new Media(new File(filePath).toURI().toString());
+            Media media = new Media(new File(song.getFilePath()).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 
             media.setOnError(() -> {
@@ -152,6 +175,14 @@ public class MediaPlayerController {
                     showErrorAlert("Equalizer Not Supported", "Audio equalizer is not supported by the media player.", "");
                 }
                 mediaPlayer.play();
+                Duration totalDuration = media.getDuration();
+                progressSlider.setMax(totalDuration.toSeconds());
+                totalTimeLabel.setText(formatTime(totalDuration));
+            });
+
+            mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+                progressSlider.setValue(newValue.toSeconds());
+                currentTimeLabel.setText(formatTime(newValue));
             });
 
             mediaPlayer.setOnEndOfMedia(this::playNextTrack);
@@ -247,6 +278,12 @@ public class MediaPlayerController {
             EqualizerBand trebleBand = audioEqualizer.getBands().get(2); // Adjusting the third band for treble
             trebleBand.setGain(level);
         }
+    }
+
+    private String formatTime(Duration duration) {
+        int minutes = (int) duration.toMinutes();
+        int seconds = (int) (duration.toSeconds() % 60);
+        return String.format("%02d:%02d", minutes, seconds);
     }
 }
 
