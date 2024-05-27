@@ -1,29 +1,18 @@
 package AUKmusic.playlist;
 
 import AUKmusic.SongLinkedList;
-import AUKmusic.playlist.*;
 import AUKmusic.song.Song;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-
-import java.io.IOException;
-import java.util.Optional;
 import AUKmusic.QuickSort;
 import AUKmusic.Search;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import AUKmusic.song.SongListCellFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +23,10 @@ public class PlaylistController {
     private ListView<Playlist> playlistListView;
 
     @FXML
-    private ListView<Song> songListView;
+    private ListView<Song> playlistSongListView;
+
+    @FXML
+    private ListView<Song> allSongsListView;
 
     @FXML
     private TextField playlistNameField;
@@ -55,9 +47,6 @@ public class PlaylistController {
     private Button editPlaylistButton;
 
     @FXML
-    private Button playPlaylistButton;
-
-    @FXML
     private Button sortButton;
 
     @FXML
@@ -73,17 +62,29 @@ public class PlaylistController {
 
     private Playlist currentPlaylist;
 
+    private ObservableList<Song> songLibrary;
+
     public void initialize() {
         try {
+            // Initialize playlist list
             playlistList = FXCollections.observableArrayList(Playlist.list());
             playlistListView.setItems(playlistList);
 
+            playlistSongListView.setCellFactory(new SongListCellFactory());
+            allSongsListView.setCellFactory(new SongListCellFactory());
+            searchResultsListView.setCellFactory(new SongListCellFactory());
+
+            // Set listener for playlist selection changes
             playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     currentPlaylist = newValue;
-                    songListView.setItems(FXCollections.observableArrayList(currentPlaylist.getSongs().toList()));
+                    playlistSongListView.setItems(FXCollections.observableArrayList(currentPlaylist.getSongs().toList()));
                 }
             });
+
+            // Load all songs into the song library
+            songLibrary = FXCollections.observableArrayList(Song.list());
+            allSongsListView.setItems(songLibrary);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,21 +116,19 @@ public class PlaylistController {
 
     @FXML
     private void handleAddSongToPlaylist(ActionEvent event) {
-        Playlist selectedPlaylist = playlistListView.getSelectionModel().getSelectedItem();
-        Song selectedSong = songListView.getSelectionModel().getSelectedItem();
-        if (selectedPlaylist != null && selectedSong != null) {
-            selectedPlaylist.addSong(selectedSong);
-            songListView.setItems(FXCollections.observableArrayList(selectedPlaylist.getSongs().toList()));
+        Song selectedSong = allSongsListView.getSelectionModel().getSelectedItem();
+        if (currentPlaylist != null && selectedSong != null) {
+            currentPlaylist.addSong(selectedSong);
+            playlistSongListView.setItems(FXCollections.observableArrayList(currentPlaylist.getSongs().toList()));
         }
     }
 
     @FXML
     private void handleRemoveSongFromPlaylist(ActionEvent event) {
-        Playlist selectedPlaylist = playlistListView.getSelectionModel().getSelectedItem();
-        Song selectedSong = songListView.getSelectionModel().getSelectedItem();
-        if (selectedPlaylist != null && selectedSong != null) {
-            selectedPlaylist.removeSong(selectedSong);
-            songListView.setItems(FXCollections.observableArrayList(selectedPlaylist.getSongs().toList()));
+        Song selectedSong = playlistSongListView.getSelectionModel().getSelectedItem();
+        if (currentPlaylist != null && selectedSong != null) {
+            currentPlaylist.removeSong(selectedSong);
+            playlistSongListView.setItems(FXCollections.observableArrayList(currentPlaylist.getSongs().toList()));
         }
     }
 
@@ -144,36 +143,20 @@ public class PlaylistController {
     }
 
     @FXML
-    private void handlePlayPlaylist(ActionEvent event) {
-        Playlist selectedPlaylist = playlistListView.getSelectionModel().getSelectedItem();
-        if (selectedPlaylist != null) {
-            selectedPlaylist.getSongs().forEach(Song::playSong);
-        }
-    }
-
-    @FXML
     private void handleSearch() {
         if (currentPlaylist != null) {
             String query = searchTextField.getText().trim();
             List<Song> songs = currentPlaylist.getSongs().toList();
-            Song result = Search.findSongByTitle(songs, query);
-            searchResultsListView.getItems().clear();
-            if (result != null) {
-                searchResultsListView.getItems().add(result);
-            } else {
-                javafx.util.Duration javafxDuration = Duration.ZERO;
-                long millis = (long) javafxDuration.toMillis();
-                java.time.Duration javaDuration = java.time.Duration.ofMillis(millis);
-                searchResultsListView.getItems().add(new Song("No results found", "", javaDuration, ""));
-            }
+            List<Song> results = Search.findSongsByTitle(songs, query);
+            searchResultsListView.setItems(FXCollections.observableArrayList(results));
         }
     }
 
     @FXML
     private void handleSort() {
         if (currentPlaylist != null) {
-            QuickSort.sort(currentPlaylist.getSongs().toList());
-            songListView.setItems(FXCollections.observableArrayList(currentPlaylist.getSongs().toList()));
+            List<Song> sortedSongs = QuickSort.sort(currentPlaylist.getSongs().toList());
+            playlistSongListView.setItems(FXCollections.observableArrayList(sortedSongs));
         }
     }
 }

@@ -7,28 +7,43 @@
 <?import javafx.scene.layout.*?>
 
 
-<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AUKmusic.playlist.PlaylistController">
-    <children>
-        <Label text="Playlists" />
-        <ListView fx:id="playlistListView" prefHeight="150.0" prefWidth="200.0" />
-        <HBox spacing="10">
-            <TextField fx:id="playlistNameField" promptText="Playlist Name" />
-            <Button fx:id="addPlaylistButton" text="Add Playlist" onAction="#handleAddPlaylist" />
-            <Button fx:id="editPlaylistButton" text="Edit Playlist" onAction="#handleEditPlaylist" />
-        </HBox>
-        <Button fx:id="deletePlaylistButton" text="Delete Playlist" onAction="#handleDeletePlaylist" />
-        <Label text="Songs" />
-        <ListView fx:id="songListView" prefHeight="150.0" prefWidth="200.0" />
-        <HBox spacing="10">
-            <Button fx:id="addSongToPlaylistButton" text="Add Song to Playlist" onAction="#handleAddSongToPlaylist" />
-            <Button fx:id="removeSongFromPlaylistButton" text="Remove Song from Playlist" onAction="#handleRemoveSongFromPlaylist" />
-        </HBox>
-        <Button fx:id="playPlaylistButton" text="Play Playlist" onAction="#handlePlayPlaylist" />
-        <HBox spacing="10">
-            <TextField fx:id="searchTextField" promptText="Search Song" />
-            <Button fx:id="searchButton" text="Search" onAction="#handleSearch" />
-        </HBox>
-        <ListView fx:id="searchResultsListView" prefHeight="150.0" prefWidth="200.0" />
-        <Button fx:id="sortButton" text="Sort Playlist" onAction="#handleSort" />
-    </children>
+<?import AUKmusic.song.SongListCellFactory?>
+<?import javafx.util.Callback?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="AUKmusic.playlist.PlaylistController">
+
+    <HBox spacing="10" alignment="center">
+        <TextField fx:id="playlistNameField" promptText="Enter playlist name" />
+        <Button text="Add Playlist" onAction="#handleAddPlaylist" />
+        <Button text="Delete Playlist" onAction="#handleDeletePlaylist" />
+        <Button text="Edit Playlist" onAction="#handleEditPlaylist" />
+    </HBox>
+
+    <HBox spacing="20">
+        <VBox>
+            <Label text="Playlists" />
+            <ListView fx:id="playlistListView" />
+        </VBox>
+
+        <VBox>
+            <Label text="Songs in Playlist" />
+            <ListView fx:id="playlistSongListView" />
+            <Button text="Remove Song from Playlist" onAction="#handleRemoveSongFromPlaylist" />
+        </VBox>
+
+        <VBox>
+            <Label text="All Songs" />
+            <ListView fx:id="allSongsListView" />
+            <Button text="Add Song to Playlist" onAction="#handleAddSongToPlaylist" />
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="center">
+        <TextField fx:id="searchTextField" promptText="Search songs" />
+        <Button text="Search" onAction="#handleSearch" />
+        <Button text="Sort Playlist" onAction="#handleSort" />
+    </HBox>
+
+    <ListView fx:id="searchResultsListView" />
 </VBox>
