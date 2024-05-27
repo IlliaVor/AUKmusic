@@ -15,5 +15,6 @@ module com.example.aukmusic {
     opens com.example.aukmusic to javafx.fxml;
     opens AUKmusic.playlist to javafx.fxml;
     opens AUKmusic.song to javafx.fxml;
+    opens AUKmusic.mediaplayer to javafx.fxml;
     exports AUKmusic;
 }

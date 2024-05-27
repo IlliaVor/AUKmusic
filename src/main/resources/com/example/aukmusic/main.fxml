@@ -15,6 +15,9 @@
             <Tab text="Songs">
                 <fx:include source="song/songController.fxml"/>
             </Tab>
+            <Tab text="Music player">
+                <fx:include source="media/mediaPlayerController.fxml"/>
+            </Tab>
         </TabPane>
     </center>
 </BorderPane>
