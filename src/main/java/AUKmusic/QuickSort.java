@@ -2,8 +2,9 @@ package AUKmusic;
 
 import AUKmusic.song.Song;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class QuickSort {
+public class QuickSort extends SongLinkedList {
 
     public static List<Song> sort(List<Song> songs) {
         if (songs == null || songs.size() <= 1) {
@@ -36,5 +37,10 @@ public class QuickSort {
         list.set(i + 1, list.get(high));
         list.set(high, temp);
         return i + 1;
+    }
+
+    @Override
+    public void forEach(Consumer<? super Song> action) {
+        super.forEach(action);
     }
 }
