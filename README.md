@@ -50,13 +50,6 @@ In your IDE, locate the Main class and run it.
 
 ![UML Diagram](https://github.com/IlliaVor/AUKmusic/assets/142899385/60a56aa0-0e4b-4512-b4e1-63b64359cb56)
 
-## 4. Explanation
-![Playlist menu](https://github.com/IlliaVor/AUKmusic/assets/142899385/0f8744c4-fbde-45a6-b492-504e0b61cc1e)
-![Song menu](https://github.com/IlliaVor/AUKmusic/assets/142899385/1be1a707-9531-4148-8df7-16a2878d33ad)
-![Media Player](https://github.com/IlliaVor/AUKmusic/assets/142899385/6caf6a64-d1c7-4d16-a5b2-71af4187fcca)
-
-![https://www.loom.com/share/06e3c9855c814717bf1f83f9ba679341?sid=32b0e8c7-db92-404d-9fc1-2074a76db963]
-
 
 
 
